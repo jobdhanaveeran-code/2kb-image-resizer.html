@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IMG FORGE — Batch Resizer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --accent: #e8ff47;
+    --accent2: #47ffcf;
+    --text: #f0f0f0;
+    --muted: #5a5a72;
+    --border: #2a2a38;
+    --danger: #ff4747;
+    --success: #47ffcf;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 80px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(232,255,71,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; right: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(71,255,207,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .logo {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 6px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  .specs-bar {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 36px;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  .spec-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .spec-chip .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+  }
+
+  .spec-chip .dot.teal { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+
+  /* DROP ZONE */
+  .drop-zone {
+    width: 100%;
+    max-width: 700px;
+    border: 2px dashed var(--border);
+    border-radius: 20px;
+    padding: 64px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: var(--surface);
+    position: relative;
+    animation: fadeDown 0.6s 0.2s ease both;
+    margin-bottom: 32px;
+  }
+
+  .drop-zone:hover, .drop-zone.dragging {
+    border-color: var(--accent);
+    background: rgba(232,255,71,0.04);
+    box-shadow: 0 0 40px rgba(232,255,71,0.08), inset 0 0 40px rgba(232,255,71,0.03);
+  }
+
+  .drop-zone.dragging .drop-icon { transform: scale(1.15) translateY(-4px); }
+
+  .drop-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: block;
+    transition: transform 0.25s ease;
+  }
+
+  .drop-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .drop-sub {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 20px;
+  }
+
+  .browse-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .browse-btn:hover { background: #d4eb3e; transform: translateY(-1px); }
+
+  #fileInput { display: none; }
+
+  /* FILE LIST */
+  .file-list {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+    animation: fadeDown 0.4s ease both;
+  }
+
+  .file-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.2s;
+    animation: slideIn 0.3s ease both;
+  }
+
+  .file-item.done { border-color: rgba(71,255,207,0.4); }
+  .file-item.error { border-color: rgba(255,71,71,0.4); }
+
+  .file-thumb {
+    width: 40px; height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: var(--surface2);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    overflow: hidden;
+  }
+
+  .file-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .file-info { flex: 1; min-width: 0; }
+
+  .file-name {
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+  }
+
+  .file-meta {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+  }
+
+  .file-status {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .status-pending { color: var(--muted); }
+  .status-processing { color: var(--accent); animation: pulse 1s infinite; }
+  .status-done { color: var(--success); }
+  .status-error { color: var(--danger); }
+
+  .remove-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .remove-btn:hover { color: var(--danger); }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    width: 100%;
+    height: 3px;
+    background: var(--border);
+    border-radius: 999px;
+    margin-top: 8px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 999px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  /* ACTIONS */
+  .actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 700px;
+    animation: fadeDown 0.6s 0.3s ease both;
+  }
+
+  .btn-process {
+    flex: 1;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: var(--radius);
+    padding: 16px 32px;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-process:hover:not(:disabled) { background: #d4eb3e; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,255,71,0.3); }
+  .btn-process:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-download {
+    background: var(--surface2);
+    color: var(--accent2);
+    border: 1px solid var(--accent2);
+    border-radius: var(--radius);
+    padding: 16px 24px;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .btn-download:hover:not(:disabled) { background: rgba(71,255,207,0.1); transform: translateY(-2px); }
+  .btn-download:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* RESULT SUMMARY */
+  .summary {
+    width: 100%;
+    max-width: 700px;
+    background: var(--surface);
+    border: 1px solid rgba(71,255,207,0.3);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: none;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+    animation: fadeDown 0.4s ease both;
+  }
+
+  .summary.visible { display: flex; }
+
+  .summary-icon { font-size: 24px; }
+
+  .summary-text { flex: 1; }
+  .summary-text strong { font-size: 14px; color: var(--success); display: block; margin-bottom: 2px; }
+  .summary-text span { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  /* CANVAS (hidden, used for processing) */
+  #processingCanvas { display: none; }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 24px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    display: none;
+  }
+
+  .warning-note {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 12px;
+    max-width: 700px;
+    opacity: 0.7;
+  }
+
+  .warning-note span { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⬡ Image Processor</div>
+  <h1>2-KB COMPRESSER</h1>
+  <p class="subtitle">// batch resize · convert · compress</p>
+</header>
+
+<div class="specs-bar">
+  <div class="spec-chip"><span class="dot"></span> Width: 40px (auto height)</div>
+  <div class="spec-chip"><span class="dot teal"></span> Output: PNG</div>
+  <div class="spec-chip"><span class="dot"></span> DPI: 36</div>
+  <div class="spec-chip"><span class="dot teal"></span> Max size: &lt;2KB</div>
+</div>
+
+<div class="drop-zone" id="dropZone">
+  <span class="drop-icon">🗂</span>
+  <div class="drop-title">Drop your images here</div>
+  <div class="drop-sub">PNG · JPG · JPEG · SVG · multiple files supported</div>
+  <label class="browse-btn" for="fileInput">Browse Files</label>
+  <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml">
+</div>
+
+<div class="file-list" id="fileList"></div>
+
+<div class="actions">
+  <button class="btn-process" id="processBtn" disabled>
+    ⚡ Process All Images
+  </button>
+  <button class="btn-download" id="downloadBtn" disabled>
+    ⬇ Download ZIP
+  </button>
+</div>
+
+<div class="summary" id="summary">
+  <span class="summary-icon">✅</span>
+  <div class="summary-text">
+    <strong id="summaryText">All images processed!</strong>
+    <span id="summaryMeta"></span>
+  </div>
+</div>
+
+<p class="warning-note">
+  <span>Note:</span> DPI metadata is embedded in PNG. Sub-2KB compression uses aggressive quality reduction — best for icons & thumbnails.
+</p>
+
+<canvas id="processingCanvas"></canvas>
+
+<script>
+// ─── State ───────────────────────────────────────────────────
+const files = []; // { file, id, status, resultBlob, outputSize }
+let idCounter = 0;
+
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const fileListEl = document.getElementById('fileList');
+const processBtn = document.getElementById('processBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const summaryEl = document.getElementById('summary');
+const canvas = document.getElementById('processingCanvas');
+const ctx = canvas.getContext('2d');
+
+// ─── Drag & Drop ─────────────────────────────────────────────
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragging'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragging'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragging');
+  handleFiles([...e.dataTransfer.files]);
+});
+fileInput.addEventListener('change', () => handleFiles([...fileInput.files]));
+
+function handleFiles(incoming) {
+  const valid = incoming.filter(f =>
+    ['image/png','image/jpeg','image/svg+xml'].includes(f.type) ||
+    f.name.match(/\.(png|jpg|jpeg|svg)$/i)
+  );
+  valid.forEach(addFile);
+  renderList();
+  updateButtons();
+}
+
+function addFile(file) {
+  const id = ++idCounter;
+  files.push({ file, id, status: 'pending', resultBlob: null, outputSize: null });
+}
+
+// ─── Render ───────────────────────────────────────────────────
+function renderList() {
+  fileListEl.innerHTML = '';
+  if (!files.length) return;
+
+  files.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = `file-item ${item.status === 'done' ? 'done' : item.status === 'error' ? 'error' : ''}`;
+    el.id = `item-${item.id}`;
+
+    const thumbId = `thumb-${item.id}`;
+    const statusText = {
+      pending: '— waiting',
+      processing: '⟳ processing...',
+      done: `✓ ${item.outputSize ? formatBytes(item.outputSize) : 'done'}`,
+      error: '✗ failed'
+    }[item.status];
+
+    el.innerHTML = `
+      <div class="file-thumb" id="${thumbId}">🖼</div>
+      <div class="file-info">
+        <div class="file-name">${item.file.name}</div>
+        <div class="file-meta">${formatBytes(item.file.size)} · ${item.file.type || 'image'}</div>
+        <div class="progress-wrap" id="prog-${item.id}">
+          <div class="progress-bar" id="bar-${item.id}"></div>
+        </div>
+      </div>
+      <div class="file-status status-${item.status}">${statusText}</div>
+      <button class="remove-btn" title="Remove" data-idx="${idx}">×</button>
+    `;
+
+    fileListEl.appendChild(el);
+
+    // Load thumbnail
+    if (item.file.type !== 'image/svg+xml') {
+      const url = URL.createObjectURL(item.file);
+      const img = document.createElement('img');
+      img.src = url;
+      img.onload = () => URL.revokeObjectURL(url);
+      document.getElementById(thumbId).innerHTML = '';
+      document.getElementById(thumbId).appendChild(img);
+    } else {
+      document.getElementById(thumbId).textContent = '⬡';
+    }
+  });
+
+  // Remove buttons
+  fileListEl.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.idx);
+      files.splice(idx, 1);
+      renderList();
+      updateButtons();
+    });
+  });
+}
+
+function updateItemStatus(id, status, outputSize) {
+  const item = files.find(f => f.id === id);
+  if (item) { item.status = status; item.outputSize = outputSize ?? item.outputSize; }
+
+  const el = document.getElementById(`item-${id}`);
+  if (!el) return;
+  el.className = `file-item ${status === 'done' ? 'done' : status === 'error' ? 'error' : ''}`;
+
+  const statusEl = el.querySelector('.file-status');
+  statusEl.className = `file-status status-${status}`;
+  statusEl.textContent = {
+    pending: '— waiting',
+    processing: '⟳ processing...',
+    done: `✓ ${outputSize ? formatBytes(outputSize) : 'done'}`,
+    error: '✗ failed'
+  }[status];
+}
+
+function updateButtons() {
+  processBtn.disabled = files.length === 0;
+  const hasDone = files.some(f => f.status === 'done');
+  downloadBtn.disabled = !hasDone;
+}
+
+// ─── Processing ───────────────────────────────────────────────
+processBtn.addEventListener('click', processAll);
+
+async function processAll() {
+  processBtn.disabled = true;
+  summaryEl.classList.remove('visible');
+  downloadBtn.disabled = true;
+
+  for (const item of files) {
+    if (item.status === 'done') continue;
+    updateItemStatus(item.id, 'processing');
+
+    try {
+      const blob = await processImage(item.file, item.id);
+      item.resultBlob = blob;
+      updateItemStatus(item.id, 'done', blob.size);
+    } catch (e) {
+      console.error(e);
+      updateItemStatus(item.id, 'error');
+    }
+  }
+
+  const doneCount = files.filter(f => f.status === 'done').length;
+  const totalSize = files.filter(f => f.resultBlob).reduce((a, f) => a + f.resultBlob.size, 0);
+  document.getElementById('summaryText').textContent = `${doneCount} image${doneCount !== 1 ? 's' : ''} processed successfully!`;
+  document.getElementById('summaryMeta').textContent = `Total output: ${formatBytes(totalSize)} · All converted to PNG @ 40px wide`;
+  summaryEl.classList.add('visible');
+
+  processBtn.disabled = false;
+  updateButtons();
+}
+
+async function processImage(file, id) {
+  // Load image (handle SVG specially)
+  const imgBitmap = await loadImageBitmap(file);
+
+  // Calculate target dimensions (40px wide, aspect-ratio height)
+  const targetW = 40;
+  const targetH = Math.round((imgBitmap.height / imgBitmap.width) * targetW);
+
+  canvas.width = targetW;
+  canvas.height = targetH;
+
+  // Draw
+  ctx.clearRect(0, 0, targetW, targetH);
+  ctx.drawImage(imgBitmap, 0, 0, targetW, targetH);
+
+  // Get PNG blob and compress under 2KB
+  const blob = await compressUnder2KB(targetW, targetH);
+
+  // Embed DPI=36 metadata into PNG bytes
+  const finalBlob = await embedDPI(blob, 36);
+  return finalBlob;
+}
+
+async function loadImageBitmap(file) {
+  if (file.type === 'image/svg+xml' || file.name.match(/\.svg$/i)) {
+    return loadSVGBitmap(file);
+  }
+  return createImageBitmap(file);
+}
+
+async function loadSVGBitmap(file) {
+  // Read SVG as text, parse viewBox/width/height, inject size, use data URL
+  const svgText = await file.text();
+
+  // Parse declared width/height/viewBox from SVG
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svgText, 'image/svg+xml');
+  const svgEl = doc.querySelector('svg');
+
+  let svgW = 0, svgH = 0;
+
+  // Try width/height attributes
+  const wAttr = svgEl?.getAttribute('width');
+  const hAttr = svgEl?.getAttribute('height');
+  if (wAttr && hAttr) {
+    svgW = parseFloat(wAttr);
+    svgH = parseFloat(hAttr);
+  }
+
+  // Fallback: use viewBox
+  if ((!svgW || !svgH) && svgEl?.getAttribute('viewBox')) {
+    const vb = svgEl.getAttribute('viewBox').trim().split(/[\s,]+/);
+    if (vb.length === 4) { svgW = parseFloat(vb[2]); svgH = parseFloat(vb[3]); }
+  }
+
+  // Final fallback
+  if (!svgW || !svgH || isNaN(svgW) || isNaN(svgH)) { svgW = 300; svgH = 300; }
+
+  // Force explicit size on SVG element so browser renders it correctly
+  svgEl.setAttribute('width', svgW);
+  svgEl.setAttribute('height', svgH);
+
+  const serializer = new XMLSerializer();
+  const fixedSVG = serializer.serializeToString(svgEl);
+
+  // Use data URL (avoids tainted canvas from object URLs)
+  const dataURL = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(fixedSVG);
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const oc = new OffscreenCanvas(svgW, svgH);
+      oc.getContext('2d').drawImage(img, 0, 0, svgW, svgH);
+      createImageBitmap(oc).then(resolve).catch(reject);
+    };
+    img.onerror = reject;
+    img.src = dataURL;
+  });
+}
+
+async function compressUnder2KB(w, h) {
+  const TARGET = 2048; // 2KB in bytes
+
+  // Try PNG first (lossless)
+  let blob = await canvasToBlob('image/png');
+  if (blob.size < TARGET) return blob;
+
+  // PNG is already smallest for this size — try reducing colors
+  // Use WebP as intermediate (smaller), then convert back to PNG
+  let quality = 0.8;
+  while (quality >= 0.05) {
+    // Draw with reduced quality via WebP intermediary
+    const webpBlob = await canvasToBlob('image/webp', quality);
+    const bmp = await createImageBitmap(webpBlob);
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(bmp, 0, 0);
+    blob = await canvasToBlob('image/png');
+    if (blob.size < TARGET) return blob;
+    quality -= 0.1;
+  }
+
+  // Last resort: apply slight blur to reduce complexity
+  const imageData = ctx.getImageData(0, 0, w, h);
+  const data = imageData.data;
+  // Posterize colors to reduce PNG entropy
+  for (let i = 0; i < data.length; i += 4) {
+    data[i]   = Math.round(data[i]   / 32) * 32;
+    data[i+1] = Math.round(data[i+1] / 32) * 32;
+    data[i+2] = Math.round(data[i+2] / 32) * 32;
+  }
+  ctx.putImageData(imageData, 0, 0);
+  blob = await canvasToBlob('image/png');
+  return blob;
+}
+
+function canvasToBlob(type, quality) {
+  return new Promise(resolve => canvas.toBlob(resolve, type, quality));
+}
+
+// ─── Embed DPI (pHYs chunk) into PNG ─────────────────────────
+async function embedDPI(blob, dpi) {
+  const arrayBuffer = await blob.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
+
+  // PNG structure: 8-byte signature + chunks
+  // Each chunk: 4-byte length + 4-byte type + data + 4-byte CRC
+  // We insert pHYs chunk after IHDR chunk
+
+  // DPI -> pixels per unit (metre): dpi * 39.3701
+  const ppu = Math.round(dpi * 39.3701);
+
+  // Build pHYs chunk data (9 bytes): X ppu (4) + Y ppu (4) + unit (1, 1=metre)
+  const physData = new Uint8Array(9);
+  const view = new DataView(physData.buffer);
+  view.setUint32(0, ppu, false); // X
+  view.setUint32(4, ppu, false); // Y
+  physData[8] = 1; // unit: metre
+
+  const physChunk = buildPNGChunk('pHYs', physData);
+
+  // Find end of IHDR chunk (offset 8 sig + 4 len + 4 type + 13 data + 4 crc = 33)
+  const insertAt = 33;
+
+  // Merge: [0..insertAt] + physChunk + [insertAt..]
+  const result = new Uint8Array(bytes.length + physChunk.length);
+  result.set(bytes.slice(0, insertAt), 0);
+  result.set(physChunk, insertAt);
+  result.set(bytes.slice(insertAt), insertAt + physChunk.length);
+
+  return new Blob([result], { type: 'image/png' });
+}
+
+function buildPNGChunk(type, data) {
+  const typeBytes = new TextEncoder().encode(type);
+  const length = data.length;
+  const chunk = new Uint8Array(4 + 4 + length + 4);
+  const view = new DataView(chunk.buffer);
+
+  view.setUint32(0, length, false);
+  chunk.set(typeBytes, 4);
+  chunk.set(data, 8);
+
+  // CRC32 over type + data
+  const crcInput = new Uint8Array(4 + length);
+  crcInput.set(typeBytes, 0);
+  crcInput.set(data, 4);
+  view.setUint32(8 + length, crc32(crcInput), false);
+
+  return chunk;
+}
+
+function crc32(data) {
+  let crc = 0xFFFFFFFF;
+  const table = makeCRCTable();
+  for (let i = 0; i < data.length; i++) {
+    crc = (crc >>> 8) ^ table[(crc ^ data[i]) & 0xFF];
+  }
+  return (crc ^ 0xFFFFFFFF) >>> 0;
+}
+
+let _crcTable = null;
+function makeCRCTable() {
+  if (_crcTable) return _crcTable;
+  _crcTable = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    _crcTable[n] = c;
+  }
+  return _crcTable;
+}
+
+// ─── Download ZIP ─────────────────────────────────────────────
+downloadBtn.addEventListener('click', async () => {
+  const doneItems = files.filter(f => f.status === 'done' && f.resultBlob);
+  if (!doneItems.length) return;
+
+  if (doneItems.length === 1) {
+    // Single file: direct download
+    downloadBlob(doneItems[0].resultBlob, toOutputName(doneItems[0].file.name));
+    return;
+  }
+
+  // Multiple: use JSZip via CDN
+  downloadBtn.textContent = '⏳ Zipping...';
+  downloadBtn.disabled = true;
+
+  try {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+    const zip = new JSZip();
+    doneItems.forEach(item => {
+      zip.file(toOutputName(item.file.name), item.resultBlob);
+    });
+    const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+    downloadBlob(zipBlob, `2kb.zip`);
+  } catch(e) {
+    // Fallback: download individually
+    for (const item of doneItems) {
+      downloadBlob(item.resultBlob, toOutputName(item.file.name));
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
+
+  downloadBtn.textContent = '⬇ Download ZIP';
+  downloadBtn.disabled = false;
+});
+
+function toOutputName(name) {
+  // Remove file extension
+  let base = name.replace(/\.(png|jpg|jpeg|svg)$/i, '');
+
+  // Remove scale suffixes like -2x, -1x, @2x, @1x, _2x, _1x (any number)
+  base = base.replace(/[-_@]\d+(\.\d+)?x/gi, '');
+
+  // Trim any trailing spaces, dashes, underscores left over
+  base = base.replace(/[-_\s]+$/, '').trim();
+
+  return `${base}-2kb.png`;
+}
+
+function downloadBlob(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) return resolve();
+    const s = document.createElement('script');
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+// ─── Utils ────────────────────────────────────────────────────
+function formatBytes(b) {
+  if (b < 1024) return `${b} B`;
+  return `${(b / 1024).toFixed(1)} KB`;
+}
+</script>
+</body>
+</html>
