@@ -13,6 +13,7 @@
     --surface2: #1a1a24;
     --accent: #e8ff47;
     --accent2: #47ffcf;
+    --accent3: #ff47d1;
     --text: #f0f0f0;
     --muted: #5a5a72;
     --border: #2a2a38;
@@ -118,21 +119,198 @@
   }
 
   .spec-chip .dot.teal { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+  .spec-chip .dot.pink { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
+
+  /* MODULES TABS */
+  .modules-tabs {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 20px;
+    animation: fadeDown 0.6s 0.15s ease both;
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tab-btn .tab-icon { font-size: 20px; }
+  .tab-btn .tab-label { font-size: 10px; font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; }
+
+  .tab-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,255,71,0.06);
+    box-shadow: 0 0 20px rgba(232,255,71,0.1);
+  }
+
+  .tab-btn:hover:not(.active) { border-color: var(--muted); color: var(--text); }
+
+  /* MODULE PANELS */
+  .module-panel { display: none; width: 100%; max-width: 700px; }
+  .module-panel.active { display: block; }
+
+  /* ── COMPRESSOR MODULE ── */
+
+  /* ── FORMAT CONVERTER MODULE ── */
+  .converter-settings {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    animation: fadeDown 0.4s ease both;
+  }
+
+  .settings-title {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .format-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .format-card {
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .format-card:hover { border-color: var(--muted); }
+
+  .format-card.selected {
+    border-color: var(--accent3);
+    background: rgba(255,71,209,0.08);
+    box-shadow: 0 0 16px rgba(255,71,209,0.15);
+  }
+
+  .format-card .fmt-name {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .format-card .fmt-desc {
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .format-card.selected .fmt-name { color: var(--accent3); }
+
+  .format-card .badge {
+    position: absolute;
+    top: -6px; right: -6px;
+    background: var(--accent);
+    color: #000;
+    font-size: 8px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 999px;
+    letter-spacing: 1px;
+  }
+
+  /* Quality slider row */
+  .quality-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .quality-label {
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 90px;
+  }
+
+  .quality-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .quality-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent3);
+    box-shadow: 0 0 8px rgba(255,71,209,0.5);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .quality-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  .quality-val {
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    color: var(--accent3);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .quality-note {
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    margin-top: 10px;
+  }
 
   /* DROP ZONE */
   .drop-zone {
     width: 100%;
-    max-width: 700px;
     border: 2px dashed var(--border);
     border-radius: 20px;
-    padding: 64px 32px;
+    padding: 56px 32px;
     text-align: center;
     cursor: pointer;
     transition: all 0.25s ease;
     background: var(--surface);
     position: relative;
     animation: fadeDown 0.6s 0.2s ease both;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
   }
 
   .drop-zone:hover, .drop-zone.dragging {
@@ -143,25 +321,9 @@
 
   .drop-zone.dragging .drop-icon { transform: scale(1.15) translateY(-4px); }
 
-  .drop-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-    display: block;
-    transition: transform 0.25s ease;
-  }
-
-  .drop-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .drop-sub {
-    font-size: 13px;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 20px;
-  }
+  .drop-icon { font-size: 48px; margin-bottom: 16px; display: block; transition: transform 0.25s ease; }
+  .drop-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .drop-sub { font-size: 13px; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 20px; }
 
   .browse-btn {
     display: inline-block;
@@ -180,17 +342,18 @@
   }
 
   .browse-btn:hover { background: #d4eb3e; transform: translateY(-1px); }
+  .browse-btn.pink { background: var(--accent3); }
+  .browse-btn.pink:hover { background: #e040bc; }
 
-  #fileInput { display: none; }
+  #fileInput, #convFileInput { display: none; }
 
   /* FILE LIST */
   .file-list {
     width: 100%;
-    max-width: 700px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     animation: fadeDown 0.4s ease both;
   }
 
@@ -208,6 +371,7 @@
 
   .file-item.done { border-color: rgba(71,255,207,0.4); }
   .file-item.error { border-color: rgba(255,71,71,0.4); }
+  .file-item.conv-done { border-color: rgba(255,71,209,0.4); }
 
   .file-thumb {
     width: 40px; height: 40px;
@@ -223,23 +387,15 @@
   }
 
   .file-thumb img { width: 100%; height: 100%; object-fit: cover; }
-
   .file-info { flex: 1; min-width: 0; }
 
   .file-name {
-    font-size: 13px;
-    font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 13px; font-weight: 700;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     margin-bottom: 3px;
   }
 
-  .file-meta {
-    font-size: 11px;
-    font-family: 'Space Mono', monospace;
-    color: var(--muted);
-  }
+  .file-meta { font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); }
 
   .file-status {
     font-size: 11px;
@@ -251,48 +407,22 @@
   .status-pending { color: var(--muted); }
   .status-processing { color: var(--accent); animation: pulse 1s infinite; }
   .status-done { color: var(--success); }
+  .status-conv-done { color: var(--accent3); }
   .status-error { color: var(--danger); }
 
   .remove-btn {
-    background: none;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
-    padding: 4px;
-    border-radius: 4px;
-    transition: color 0.2s;
-    flex-shrink: 0;
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 18px; line-height: 1;
+    padding: 4px; border-radius: 4px; transition: color 0.2s; flex-shrink: 0;
   }
 
   .remove-btn:hover { color: var(--danger); }
-
-  /* PROGRESS BAR */
-  .progress-wrap {
-    width: 100%;
-    height: 3px;
-    background: var(--border);
-    border-radius: 999px;
-    margin-top: 8px;
-    overflow: hidden;
-    display: none;
-  }
-
-  .progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 999px;
-    transition: width 0.3s ease;
-    width: 0%;
-  }
 
   /* ACTIONS */
   .actions {
     display: flex;
     gap: 12px;
     width: 100%;
-    max-width: 700px;
     animation: fadeDown 0.6s 0.3s ease both;
   }
 
@@ -317,6 +447,8 @@
 
   .btn-process:hover:not(:disabled) { background: #d4eb3e; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,255,71,0.3); }
   .btn-process:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-process.pink { background: var(--accent3); }
+  .btn-process.pink:hover:not(:disabled) { background: #e040bc; box-shadow: 0 8px 30px rgba(255,71,209,0.3); }
 
   .btn-download {
     background: var(--surface2);
@@ -338,10 +470,9 @@
   .btn-download:hover:not(:disabled) { background: rgba(71,255,207,0.1); transform: translateY(-2px); }
   .btn-download:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  /* RESULT SUMMARY */
+  /* SUMMARY */
   .summary {
     width: 100%;
-    max-width: 700px;
     background: var(--surface);
     border: 1px solid rgba(71,255,207,0.3);
     border-radius: var(--radius);
@@ -353,18 +484,57 @@
     animation: fadeDown 0.4s ease both;
   }
 
+  .summary.pink-border { border-color: rgba(255,71,209,0.3); }
   .summary.visible { display: flex; }
-
   .summary-icon { font-size: 24px; }
-
   .summary-text { flex: 1; }
   .summary-text strong { font-size: 14px; color: var(--success); display: block; margin-bottom: 2px; }
+  .summary-text strong.pink { color: var(--accent3); }
   .summary-text span { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
 
-  /* CANVAS (hidden, used for processing) */
+  /* FORMAT BADGE IN FILE META */
+  .fmt-tag {
+    display: inline-block;
+    background: rgba(255,71,209,0.15);
+    color: var(--accent3);
+    border: 1px solid rgba(255,71,209,0.3);
+    border-radius: 4px;
+    font-size: 9px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    padding: 1px 5px;
+    margin-left: 6px;
+    letter-spacing: 1px;
+    vertical-align: middle;
+  }
+
+  /* AVIF support warning */
+  .avif-warning {
+    display: none;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    color: #ffaa47;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(255,170,71,0.08);
+    border: 1px solid rgba(255,170,71,0.2);
+    border-radius: 8px;
+  }
+
   #processingCanvas { display: none; }
 
-  /* ANIMATIONS */
+  .warning-note {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 12px;
+    max-width: 700px;
+    opacity: 0.7;
+  }
+
+  .warning-note span { color: var(--accent); }
+
   @keyframes fadeDown {
     from { opacity: 0; transform: translateY(-16px); }
     to { opacity: 1; transform: translateY(0); }
@@ -379,80 +549,154 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.4; }
   }
-
-  .empty-state {
-    text-align: center;
-    padding: 24px;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    display: none;
-  }
-
-  .warning-note {
-    font-size: 11px;
-    font-family: 'Space Mono', monospace;
-    color: var(--muted);
-    text-align: center;
-    margin-top: 12px;
-    max-width: 700px;
-    opacity: 0.7;
-  }
-
-  .warning-note span { color: var(--accent); }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">⬡ Image Processor</div>
-  <h1>2-KB COMPRESSER</h1>
+  <h1>IMG FORGE</h1>
   <p class="subtitle">// batch resize · convert · compress</p>
 </header>
 
 <div class="specs-bar">
-  <div class="spec-chip"><span class="dot"></span> Width: 40px (auto height)</div>
-  <div class="spec-chip"><span class="dot teal"></span> Output: PNG</div>
-  <div class="spec-chip"><span class="dot"></span> DPI: 36</div>
-  <div class="spec-chip"><span class="dot teal"></span> Max size: &lt;2KB</div>
+  <div class="spec-chip"><span class="dot"></span> Resize: 40px wide</div>
+  <div class="spec-chip"><span class="dot teal"></span> Compress: &lt;2KB PNG</div>
+  <div class="spec-chip"><span class="dot pink"></span> Convert: PNG · JPG · WebP · AVIF</div>
 </div>
 
-<div class="drop-zone" id="dropZone">
-  <span class="drop-icon">🗂</span>
-  <div class="drop-title">Drop your images here</div>
-  <div class="drop-sub">PNG · JPG · JPEG · SVG · multiple files supported</div>
-  <label class="browse-btn" for="fileInput">Browse Files</label>
-  <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml">
-</div>
-
-<div class="file-list" id="fileList"></div>
-
-<div class="actions">
-  <button class="btn-process" id="processBtn" disabled>
-    ⚡ Process All Images
+<!-- MODULE TABS -->
+<div class="modules-tabs">
+  <button class="tab-btn active" data-tab="compressor">
+    <span class="tab-icon">⚡</span>
+    <span class="tab-label">2KB Compressor</span>
   </button>
-  <button class="btn-download" id="downloadBtn" disabled>
-    ⬇ Download ZIP
+  <button class="tab-btn" data-tab="converter">
+    <span class="tab-icon">🔄</span>
+    <span class="tab-label">Format Converter</span>
   </button>
 </div>
 
-<div class="summary" id="summary">
-  <span class="summary-icon">✅</span>
-  <div class="summary-text">
-    <strong id="summaryText">All images processed!</strong>
-    <span id="summaryMeta"></span>
+<!-- ══════════════════════════════════════
+     MODULE 1: 2KB COMPRESSOR
+════════════════════════════════════════ -->
+<div class="module-panel active" id="panel-compressor">
+
+  <div class="drop-zone" id="dropZone">
+    <span class="drop-icon">🗂</span>
+    <div class="drop-title">Drop your images here</div>
+    <div class="drop-sub">PNG · JPG · JPEG · SVG · multiple files supported</div>
+    <label class="browse-btn" for="fileInput">Browse Files</label>
+    <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml">
+  </div>
+
+  <div class="file-list" id="fileList"></div>
+
+  <div class="actions">
+    <button class="btn-process" id="processBtn" disabled>⚡ Process All Images</button>
+    <button class="btn-download" id="downloadBtn" disabled>⬇ Download ZIP</button>
+  </div>
+
+  <div class="summary" id="summary">
+    <span class="summary-icon">✅</span>
+    <div class="summary-text">
+      <strong id="summaryText">All images processed!</strong>
+      <span id="summaryMeta"></span>
+    </div>
+  </div>
+
+  <p class="warning-note" style="margin-top:16px">
+    <span>Note:</span> DPI metadata is embedded in PNG. Sub-2KB compression uses aggressive quality reduction — best for icons & thumbnails.
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODULE 2: FORMAT CONVERTER
+════════════════════════════════════════ -->
+<div class="module-panel" id="panel-converter">
+
+  <!-- Settings -->
+  <div class="converter-settings">
+    <div class="settings-title">// Output Format</div>
+    <div class="format-grid">
+      <div class="format-card" data-fmt="image/png" data-ext="png">
+        <div class="fmt-name">PNG</div>
+        <div class="fmt-desc">Lossless<br>transparency</div>
+      </div>
+      <div class="format-card selected" data-fmt="image/webp" data-ext="webp">
+        <div class="fmt-name">WebP</div>
+        <div class="fmt-desc">Best size/<br>quality ratio</div>
+        <div class="badge">REC</div>
+      </div>
+      <div class="format-card" data-fmt="image/jpeg" data-ext="jpg">
+        <div class="fmt-name">JPG</div>
+        <div class="fmt-desc">Universal<br>compatibility</div>
+      </div>
+      <div class="format-card" data-fmt="image/avif" data-ext="avif">
+        <div class="fmt-name">AVIF</div>
+        <div class="fmt-desc">Next-gen<br>smallest size</div>
+      </div>
+    </div>
+
+    <div class="quality-row" id="qualityRow">
+      <span class="quality-label">Quality</span>
+      <input type="range" class="quality-slider" id="qualitySlider" min="10" max="100" value="90">
+      <span class="quality-val" id="qualityVal">90%</span>
+    </div>
+    <div class="quality-note" id="qualityNote">Higher quality = larger file size. PNG ignores quality setting (lossless).</div>
+    <div class="avif-warning" id="avifWarn">⚠ AVIF encoding may not be supported in all browsers. Falls back to WebP if unavailable.</div>
+  </div>
+
+  <!-- Drop zone -->
+  <div class="drop-zone" id="convDropZone">
+    <span class="drop-icon">🔄</span>
+    <div class="drop-title">Drop images to convert</div>
+    <div class="drop-sub">PNG · JPG · JPEG · WebP · SVG · multiple files supported</div>
+    <label class="browse-btn pink" for="convFileInput">Browse Files</label>
+    <input type="file" id="convFileInput" multiple accept=".png,.jpg,.jpeg,.webp,.svg,image/png,image/jpeg,image/webp,image/svg+xml">
+  </div>
+
+  <div class="file-list" id="convFileList"></div>
+
+  <div class="actions">
+    <button class="btn-process pink" id="convProcessBtn" disabled>🔄 Convert All</button>
+    <button class="btn-download" id="convDownloadBtn" disabled>⬇ Download ZIP</button>
+  </div>
+
+  <div class="summary pink-border" id="convSummary">
+    <span class="summary-icon">🎨</span>
+    <div class="summary-text">
+      <strong class="pink" id="convSummaryText">All images converted!</strong>
+      <span id="convSummaryMeta"></span>
+    </div>
   </div>
 </div>
-
-<p class="warning-note">
-  <span>Note:</span> DPI metadata is embedded in PNG. Sub-2KB compression uses aggressive quality reduction — best for icons & thumbnails.
-</p>
 
 <canvas id="processingCanvas"></canvas>
 
 <script>
-// ─── State ───────────────────────────────────────────────────
-const files = []; // { file, id, status, resultBlob, outputSize }
+// ══════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.module-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`panel-${btn.dataset.tab}`).classList.add('active');
+  });
+});
+
+// ══════════════════════════════════════
+// SHARED CANVAS
+// ══════════════════════════════════════
+const canvas = document.getElementById('processingCanvas');
+const ctx = canvas.getContext('2d');
+
+// ══════════════════════════════════════
+// MODULE 1 — 2KB COMPRESSOR
+// ══════════════════════════════════════
+const files = [];
 let idCounter = 0;
 
 const dropZone = document.getElementById('dropZone');
@@ -461,215 +705,345 @@ const fileListEl = document.getElementById('fileList');
 const processBtn = document.getElementById('processBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const summaryEl = document.getElementById('summary');
-const canvas = document.getElementById('processingCanvas');
-const ctx = canvas.getContext('2d');
 
-// ─── Drag & Drop ─────────────────────────────────────────────
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragging'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragging'));
 dropZone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropZone.classList.remove('dragging');
+  e.preventDefault(); dropZone.classList.remove('dragging');
   handleFiles([...e.dataTransfer.files]);
 });
 fileInput.addEventListener('change', () => handleFiles([...fileInput.files]));
 
 function handleFiles(incoming) {
   const valid = incoming.filter(f =>
-    ['image/png','image/jpeg','image/svg+xml'].includes(f.type) ||
-    f.name.match(/\.(png|jpg|jpeg|svg)$/i)
+    ['image/png','image/jpeg','image/svg+xml'].includes(f.type) || f.name.match(/\.(png|jpg|jpeg|svg)$/i)
   );
-  valid.forEach(addFile);
-  renderList();
-  updateButtons();
+  valid.forEach(f => { files.push({ file: f, id: ++idCounter, status: 'pending', resultBlob: null, outputSize: null }); });
+  renderList(); updateButtons();
 }
 
-function addFile(file) {
-  const id = ++idCounter;
-  files.push({ file, id, status: 'pending', resultBlob: null, outputSize: null });
-}
-
-// ─── Render ───────────────────────────────────────────────────
 function renderList() {
   fileListEl.innerHTML = '';
-  if (!files.length) return;
-
   files.forEach((item, idx) => {
     const el = document.createElement('div');
     el.className = `file-item ${item.status === 'done' ? 'done' : item.status === 'error' ? 'error' : ''}`;
     el.id = `item-${item.id}`;
-
-    const thumbId = `thumb-${item.id}`;
-    const statusText = {
-      pending: '— waiting',
-      processing: '⟳ processing...',
-      done: `✓ ${item.outputSize ? formatBytes(item.outputSize) : 'done'}`,
-      error: '✗ failed'
-    }[item.status];
-
+    const statusText = { pending: '— waiting', processing: '⟳ processing...', done: `✓ ${item.outputSize ? formatBytes(item.outputSize) : 'done'}`, error: '✗ failed' }[item.status];
     el.innerHTML = `
-      <div class="file-thumb" id="${thumbId}">🖼</div>
+      <div class="file-thumb" id="thumb-${item.id}">🖼</div>
       <div class="file-info">
         <div class="file-name">${item.file.name}</div>
         <div class="file-meta">${formatBytes(item.file.size)} · ${item.file.type || 'image'}</div>
-        <div class="progress-wrap" id="prog-${item.id}">
-          <div class="progress-bar" id="bar-${item.id}"></div>
-        </div>
       </div>
       <div class="file-status status-${item.status}">${statusText}</div>
-      <button class="remove-btn" title="Remove" data-idx="${idx}">×</button>
-    `;
-
+      <button class="remove-btn" data-idx="${idx}">×</button>`;
     fileListEl.appendChild(el);
-
-    // Load thumbnail
     if (item.file.type !== 'image/svg+xml') {
       const url = URL.createObjectURL(item.file);
       const img = document.createElement('img');
-      img.src = url;
-      img.onload = () => URL.revokeObjectURL(url);
-      document.getElementById(thumbId).innerHTML = '';
-      document.getElementById(thumbId).appendChild(img);
-    } else {
-      document.getElementById(thumbId).textContent = '⬡';
-    }
+      img.src = url; img.onload = () => URL.revokeObjectURL(url);
+      const th = document.getElementById(`thumb-${item.id}`);
+      th.innerHTML = ''; th.appendChild(img);
+    } else { document.getElementById(`thumb-${item.id}`).textContent = '⬡'; }
   });
-
-  // Remove buttons
   fileListEl.querySelectorAll('.remove-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = parseInt(btn.dataset.idx);
-      files.splice(idx, 1);
-      renderList();
-      updateButtons();
-    });
+    btn.addEventListener('click', () => { files.splice(parseInt(btn.dataset.idx), 1); renderList(); updateButtons(); });
   });
 }
 
 function updateItemStatus(id, status, outputSize) {
   const item = files.find(f => f.id === id);
-  if (item) { item.status = status; item.outputSize = outputSize ?? item.outputSize; }
-
+  if (item) { item.status = status; if (outputSize != null) item.outputSize = outputSize; }
   const el = document.getElementById(`item-${id}`);
   if (!el) return;
   el.className = `file-item ${status === 'done' ? 'done' : status === 'error' ? 'error' : ''}`;
-
-  const statusEl = el.querySelector('.file-status');
-  statusEl.className = `file-status status-${status}`;
-  statusEl.textContent = {
-    pending: '— waiting',
-    processing: '⟳ processing...',
-    done: `✓ ${outputSize ? formatBytes(outputSize) : 'done'}`,
-    error: '✗ failed'
-  }[status];
+  const se = el.querySelector('.file-status');
+  se.className = `file-status status-${status}`;
+  se.textContent = { pending: '— waiting', processing: '⟳ processing...', done: `✓ ${outputSize ? formatBytes(outputSize) : 'done'}`, error: '✗ failed' }[status];
 }
 
 function updateButtons() {
   processBtn.disabled = files.length === 0;
-  const hasDone = files.some(f => f.status === 'done');
-  downloadBtn.disabled = !hasDone;
+  downloadBtn.disabled = !files.some(f => f.status === 'done');
 }
 
-// ─── Processing ───────────────────────────────────────────────
-processBtn.addEventListener('click', processAll);
-
-async function processAll() {
-  processBtn.disabled = true;
-  summaryEl.classList.remove('visible');
-  downloadBtn.disabled = true;
-
+processBtn.addEventListener('click', async () => {
+  processBtn.disabled = true; summaryEl.classList.remove('visible'); downloadBtn.disabled = true;
   for (const item of files) {
     if (item.status === 'done') continue;
     updateItemStatus(item.id, 'processing');
-
     try {
       const blob = await processImage(item.file, item.id);
-      item.resultBlob = blob;
-      updateItemStatus(item.id, 'done', blob.size);
-    } catch (e) {
-      console.error(e);
-      updateItemStatus(item.id, 'error');
-    }
+      item.resultBlob = blob; updateItemStatus(item.id, 'done', blob.size);
+    } catch(e) { console.error(e); updateItemStatus(item.id, 'error'); }
   }
-
   const doneCount = files.filter(f => f.status === 'done').length;
   const totalSize = files.filter(f => f.resultBlob).reduce((a, f) => a + f.resultBlob.size, 0);
-  document.getElementById('summaryText').textContent = `${doneCount} image${doneCount !== 1 ? 's' : ''} processed successfully!`;
-  document.getElementById('summaryMeta').textContent = `Total output: ${formatBytes(totalSize)} · All converted to PNG @ 40px wide`;
-  summaryEl.classList.add('visible');
+  document.getElementById('summaryText').textContent = `${doneCount} image${doneCount !== 1 ? 's' : ''} processed!`;
+  document.getElementById('summaryMeta').textContent = `Total output: ${formatBytes(totalSize)} · All → PNG @ 40px wide`;
+  summaryEl.classList.add('visible'); processBtn.disabled = false; updateButtons();
+});
 
-  processBtn.disabled = false;
-  updateButtons();
-}
-
-async function processImage(file, id) {
-  // Load image (handle SVG specially)
+async function processImage(file) {
   const imgBitmap = await loadImageBitmap(file);
-
-  // Calculate target dimensions (40px wide, aspect-ratio height)
-  const targetW = 40;
-  const targetH = Math.round((imgBitmap.height / imgBitmap.width) * targetW);
-
-  canvas.width = targetW;
-  canvas.height = targetH;
-
-  // Draw
+  const targetW = 40, targetH = Math.round((imgBitmap.height / imgBitmap.width) * targetW);
+  canvas.width = targetW; canvas.height = targetH;
   ctx.clearRect(0, 0, targetW, targetH);
   ctx.drawImage(imgBitmap, 0, 0, targetW, targetH);
-
-  // Get PNG blob and compress under 2KB
   const blob = await compressUnder2KB(targetW, targetH);
-
-  // Embed DPI=36 metadata into PNG bytes
-  const finalBlob = await embedDPI(blob, 36);
-  return finalBlob;
+  return embedDPI(blob, 36);
 }
 
-async function loadImageBitmap(file) {
-  if (file.type === 'image/svg+xml' || file.name.match(/\.svg$/i)) {
-    return loadSVGBitmap(file);
+async function compressUnder2KB(w, h) {
+  const TARGET = 2048;
+  let blob = await canvasToBlob('image/png');
+  if (blob.size < TARGET) return blob;
+  let quality = 0.8;
+  while (quality >= 0.05) {
+    const wb = await canvasToBlob('image/webp', quality);
+    const bmp = await createImageBitmap(wb);
+    ctx.clearRect(0, 0, w, h); ctx.drawImage(bmp, 0, 0);
+    blob = await canvasToBlob('image/png');
+    if (blob.size < TARGET) return blob;
+    quality -= 0.1;
   }
+  const id = ctx.getImageData(0, 0, w, h);
+  for (let i = 0; i < id.data.length; i += 4) {
+    id.data[i] = Math.round(id.data[i] / 32) * 32;
+    id.data[i+1] = Math.round(id.data[i+1] / 32) * 32;
+    id.data[i+2] = Math.round(id.data[i+2] / 32) * 32;
+  }
+  ctx.putImageData(id, 0, 0);
+  return canvasToBlob('image/png');
+}
+
+// ══════════════════════════════════════
+// MODULE 2 — FORMAT CONVERTER
+// ══════════════════════════════════════
+const convFiles = [];
+let convIdCounter = 0;
+let selectedFmt = 'image/webp';
+let selectedExt = 'webp';
+let convQuality = 0.9;
+let avifSupported = null;
+
+// Format selection
+document.querySelectorAll('.format-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.format-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedFmt = card.dataset.fmt;
+    selectedExt = card.dataset.ext;
+    const isPNG = selectedFmt === 'image/png';
+    document.getElementById('qualityRow').style.opacity = isPNG ? '0.4' : '1';
+    document.getElementById('qualityRow').style.pointerEvents = isPNG ? 'none' : 'auto';
+    document.getElementById('avifWarn').style.display = selectedFmt === 'image/avif' ? 'block' : 'none';
+  });
+});
+
+document.getElementById('qualitySlider').addEventListener('input', function() {
+  convQuality = this.value / 100;
+  document.getElementById('qualityVal').textContent = `${this.value}%`;
+});
+
+// Test AVIF support
+(async () => {
+  try {
+    const c = document.createElement('canvas'); c.width = 1; c.height = 1;
+    const b = await new Promise(r => c.toBlob(r, 'image/avif', 0.5));
+    avifSupported = b && b.size > 0 && b.type === 'image/avif';
+  } catch { avifSupported = false; }
+})();
+
+const convDropZone = document.getElementById('convDropZone');
+const convFileInput = document.getElementById('convFileInput');
+const convFileListEl = document.getElementById('convFileList');
+const convProcessBtn = document.getElementById('convProcessBtn');
+const convDownloadBtn = document.getElementById('convDownloadBtn');
+const convSummaryEl = document.getElementById('convSummary');
+
+convDropZone.addEventListener('dragover', e => { e.preventDefault(); convDropZone.classList.add('dragging'); });
+convDropZone.addEventListener('dragleave', () => convDropZone.classList.remove('dragging'));
+convDropZone.addEventListener('drop', e => {
+  e.preventDefault(); convDropZone.classList.remove('dragging');
+  handleConvFiles([...e.dataTransfer.files]);
+});
+convFileInput.addEventListener('change', () => handleConvFiles([...convFileInput.files]));
+
+function handleConvFiles(incoming) {
+  const valid = incoming.filter(f =>
+    ['image/png','image/jpeg','image/webp','image/svg+xml'].includes(f.type) ||
+    f.name.match(/\.(png|jpg|jpeg|webp|svg)$/i)
+  );
+  valid.forEach(f => { convFiles.push({ file: f, id: ++convIdCounter, status: 'pending', resultBlob: null, outputSize: null, outExt: null }); });
+  renderConvList(); updateConvButtons();
+}
+
+function renderConvList() {
+  convFileListEl.innerHTML = '';
+  convFiles.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = `file-item ${item.status === 'conv-done' ? 'conv-done' : item.status === 'error' ? 'error' : ''}`;
+    el.id = `conv-item-${item.id}`;
+    const fmtTag = item.outExt ? `<span class="fmt-tag">${item.outExt.toUpperCase()}</span>` : '';
+    const statusText = {
+      pending: '— waiting', processing: '⟳ converting...',
+      'conv-done': `✓ ${item.outputSize ? formatBytes(item.outputSize) : 'done'}`,
+      error: '✗ failed'
+    }[item.status] || '—';
+    el.innerHTML = `
+      <div class="file-thumb" id="conv-thumb-${item.id}">🖼</div>
+      <div class="file-info">
+        <div class="file-name">${item.file.name}${fmtTag}</div>
+        <div class="file-meta">${formatBytes(item.file.size)} · ${item.file.type || 'image'}</div>
+      </div>
+      <div class="file-status status-${item.status === 'conv-done' ? 'conv-done' : item.status}">${statusText}</div>
+      <button class="remove-btn" data-idx="${idx}">×</button>`;
+    convFileListEl.appendChild(el);
+    if (!item.file.name.match(/\.svg$/i)) {
+      const url = URL.createObjectURL(item.file);
+      const img = document.createElement('img');
+      img.src = url; img.onload = () => URL.revokeObjectURL(url);
+      const th = document.getElementById(`conv-thumb-${item.id}`);
+      th.innerHTML = ''; th.appendChild(img);
+    } else { document.getElementById(`conv-thumb-${item.id}`).textContent = '⬡'; }
+  });
+  convFileListEl.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', () => { convFiles.splice(parseInt(btn.dataset.idx), 1); renderConvList(); updateConvButtons(); });
+  });
+}
+
+function updateConvItemStatus(id, status, outputSize, outExt) {
+  const item = convFiles.find(f => f.id === id);
+  if (item) { item.status = status; if (outputSize != null) item.outputSize = outputSize; if (outExt) item.outExt = outExt; }
+  const el = document.getElementById(`conv-item-${id}`);
+  if (!el) return;
+  el.className = `file-item ${status === 'conv-done' ? 'conv-done' : status === 'error' ? 'error' : ''}`;
+  const fmtTag = outExt ? `<span class="fmt-tag">${outExt.toUpperCase()}</span>` : '';
+  const nameEl = el.querySelector('.file-name');
+  if (nameEl) nameEl.innerHTML = convFiles.find(f => f.id === id)?.file.name + fmtTag;
+  const se = el.querySelector('.file-status');
+  se.className = `file-status status-${status === 'conv-done' ? 'conv-done' : status}`;
+  se.textContent = { pending: '— waiting', processing: '⟳ converting...', 'conv-done': `✓ ${outputSize ? formatBytes(outputSize) : 'done'}`, error: '✗ failed' }[status] || '—';
+}
+
+function updateConvButtons() {
+  convProcessBtn.disabled = convFiles.length === 0;
+  convDownloadBtn.disabled = !convFiles.some(f => f.status === 'conv-done');
+}
+
+convProcessBtn.addEventListener('click', async () => {
+  convProcessBtn.disabled = true; convSummaryEl.classList.remove('visible'); convDownloadBtn.disabled = true;
+
+  // Snapshot current format/quality at time of click
+  const fmt = selectedFmt, ext = selectedExt, quality = convQuality;
+
+  for (const item of convFiles) {
+    if (item.status === 'conv-done') continue;
+    updateConvItemStatus(item.id, 'processing');
+    try {
+      const blob = await convertImage(item.file, fmt, ext, quality);
+      item.resultBlob = blob;
+      updateConvItemStatus(item.id, 'conv-done', blob.size, ext);
+    } catch(e) { console.error(e); updateConvItemStatus(item.id, 'error'); }
+  }
+
+  const doneCount = convFiles.filter(f => f.status === 'conv-done').length;
+  const totalIn = convFiles.filter(f => f.resultBlob).reduce((a, f) => a + f.file.size, 0);
+  const totalOut = convFiles.filter(f => f.resultBlob).reduce((a, f) => a + f.resultBlob.size, 0);
+  const savings = totalIn > 0 ? Math.round((1 - totalOut / totalIn) * 100) : 0;
+  document.getElementById('convSummaryText').textContent = `${doneCount} image${doneCount !== 1 ? 's' : ''} converted to ${ext.toUpperCase()}!`;
+  document.getElementById('convSummaryMeta').textContent = `${formatBytes(totalIn)} → ${formatBytes(totalOut)}${savings > 0 ? ` · saved ${savings}%` : ''}`;
+  convSummaryEl.classList.add('visible'); convProcessBtn.disabled = false; updateConvButtons();
+});
+
+async function convertImage(file, fmt, ext, quality) {
+  const bmp = await loadImageBitmap(file);
+  canvas.width = bmp.width; canvas.height = bmp.height;
+  ctx.clearRect(0, 0, bmp.width, bmp.height);
+
+  // For JPG: white background (no transparency)
+  if (fmt === 'image/jpeg') { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, bmp.width, bmp.height); }
+  ctx.drawImage(bmp, 0, 0);
+
+  // Try requested format, fallback if AVIF unsupported
+  let actualFmt = fmt, actualExt = ext;
+  if (fmt === 'image/avif' && avifSupported === false) {
+    actualFmt = 'image/webp'; actualExt = 'webp';
+  }
+
+  const isPNG = actualFmt === 'image/png';
+  const blob = await canvasToBlob(actualFmt, isPNG ? undefined : quality);
+
+  // Verify output type (some browsers silently downgrade)
+  if (blob.type && blob.type !== actualFmt && actualFmt !== 'image/png') {
+    return canvasToBlob('image/webp', quality);
+  }
+
+  return blob;
+}
+
+// ══════════════════════════════════════
+// DOWNLOAD (both modules)
+// ══════════════════════════════════════
+downloadBtn.addEventListener('click', () => downloadResults(files, f => toOutputName(f.file.name, 'png'), '2kb-compressed', downloadBtn));
+convDownloadBtn.addEventListener('click', () => downloadResults(convFiles, f => toConvOutputName(f.file.name, f.outExt || selectedExt), 'converted', convDownloadBtn));
+
+async function downloadResults(fileArr, nameFn, zipName, btn) {
+  const done = fileArr.filter(f => f.resultBlob);
+  if (!done.length) return;
+  if (done.length === 1) { downloadBlob(done[0].resultBlob, nameFn(done[0])); return; }
+
+  const origText = btn.innerHTML;
+  btn.innerHTML = '⏳ Zipping...'; btn.disabled = true;
+
+  try {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+    const zip = new JSZip();
+    done.forEach(item => zip.file(nameFn(item), item.resultBlob));
+    const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+    downloadBlob(zipBlob, `${zipName}.zip`);
+  } catch {
+    for (const item of done) { downloadBlob(item.resultBlob, nameFn(item)); await new Promise(r => setTimeout(r, 200)); }
+  }
+
+  btn.innerHTML = origText; btn.disabled = false;
+}
+
+function toOutputName(name, ext) {
+  let base = name.replace(/\.(png|jpg|jpeg|svg|webp|avif)$/i, '');
+  base = base.replace(/[-_@]\d+(\.\d+)?x/gi, '').replace(/[-_\s]+$/, '').trim();
+  return `${base}-2kb.${ext}`;
+}
+
+function toConvOutputName(name, ext) {
+  const base = name.replace(/\.(png|jpg|jpeg|svg|webp|avif)$/i, '');
+  return `${base}.${ext}`;
+}
+
+// ══════════════════════════════════════
+// SHARED UTILS
+// ══════════════════════════════════════
+async function loadImageBitmap(file) {
+  if (file.type === 'image/svg+xml' || file.name.match(/\.svg$/i)) return loadSVGBitmap(file);
   return createImageBitmap(file);
 }
 
 async function loadSVGBitmap(file) {
-  // Read SVG as text, parse viewBox/width/height, inject size, use data URL
   const svgText = await file.text();
-
-  // Parse declared width/height/viewBox from SVG
   const parser = new DOMParser();
   const doc = parser.parseFromString(svgText, 'image/svg+xml');
   const svgEl = doc.querySelector('svg');
-
-  let svgW = 0, svgH = 0;
-
-  // Try width/height attributes
-  const wAttr = svgEl?.getAttribute('width');
-  const hAttr = svgEl?.getAttribute('height');
-  if (wAttr && hAttr) {
-    svgW = parseFloat(wAttr);
-    svgH = parseFloat(hAttr);
-  }
-
-  // Fallback: use viewBox
+  let svgW = parseFloat(svgEl?.getAttribute('width')) || 0;
+  let svgH = parseFloat(svgEl?.getAttribute('height')) || 0;
   if ((!svgW || !svgH) && svgEl?.getAttribute('viewBox')) {
     const vb = svgEl.getAttribute('viewBox').trim().split(/[\s,]+/);
     if (vb.length === 4) { svgW = parseFloat(vb[2]); svgH = parseFloat(vb[3]); }
   }
-
-  // Final fallback
   if (!svgW || !svgH || isNaN(svgW) || isNaN(svgH)) { svgW = 300; svgH = 300; }
-
-  // Force explicit size on SVG element so browser renders it correctly
-  svgEl.setAttribute('width', svgW);
-  svgEl.setAttribute('height', svgH);
-
-  const serializer = new XMLSerializer();
-  const fixedSVG = serializer.serializeToString(svgEl);
-
-  // Use data URL (avoids tainted canvas from object URLs)
+  svgEl.setAttribute('width', svgW); svgEl.setAttribute('height', svgH);
+  const fixedSVG = new XMLSerializer().serializeToString(svgEl);
   const dataURL = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(fixedSVG);
-
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
@@ -682,103 +1056,38 @@ async function loadSVGBitmap(file) {
   });
 }
 
-async function compressUnder2KB(w, h) {
-  const TARGET = 2048; // 2KB in bytes
-
-  // Try PNG first (lossless)
-  let blob = await canvasToBlob('image/png');
-  if (blob.size < TARGET) return blob;
-
-  // PNG is already smallest for this size — try reducing colors
-  // Use WebP as intermediate (smaller), then convert back to PNG
-  let quality = 0.8;
-  while (quality >= 0.05) {
-    // Draw with reduced quality via WebP intermediary
-    const webpBlob = await canvasToBlob('image/webp', quality);
-    const bmp = await createImageBitmap(webpBlob);
-    ctx.clearRect(0, 0, w, h);
-    ctx.drawImage(bmp, 0, 0);
-    blob = await canvasToBlob('image/png');
-    if (blob.size < TARGET) return blob;
-    quality -= 0.1;
-  }
-
-  // Last resort: apply slight blur to reduce complexity
-  const imageData = ctx.getImageData(0, 0, w, h);
-  const data = imageData.data;
-  // Posterize colors to reduce PNG entropy
-  for (let i = 0; i < data.length; i += 4) {
-    data[i]   = Math.round(data[i]   / 32) * 32;
-    data[i+1] = Math.round(data[i+1] / 32) * 32;
-    data[i+2] = Math.round(data[i+2] / 32) * 32;
-  }
-  ctx.putImageData(imageData, 0, 0);
-  blob = await canvasToBlob('image/png');
-  return blob;
-}
-
 function canvasToBlob(type, quality) {
   return new Promise(resolve => canvas.toBlob(resolve, type, quality));
 }
 
-// ─── Embed DPI (pHYs chunk) into PNG ─────────────────────────
 async function embedDPI(blob, dpi) {
-  const arrayBuffer = await blob.arrayBuffer();
-  const bytes = new Uint8Array(arrayBuffer);
-
-  // PNG structure: 8-byte signature + chunks
-  // Each chunk: 4-byte length + 4-byte type + data + 4-byte CRC
-  // We insert pHYs chunk after IHDR chunk
-
-  // DPI -> pixels per unit (metre): dpi * 39.3701
+  const bytes = new Uint8Array(await blob.arrayBuffer());
   const ppu = Math.round(dpi * 39.3701);
-
-  // Build pHYs chunk data (9 bytes): X ppu (4) + Y ppu (4) + unit (1, 1=metre)
   const physData = new Uint8Array(9);
   const view = new DataView(physData.buffer);
-  view.setUint32(0, ppu, false); // X
-  view.setUint32(4, ppu, false); // Y
-  physData[8] = 1; // unit: metre
-
+  view.setUint32(0, ppu, false); view.setUint32(4, ppu, false); physData[8] = 1;
   const physChunk = buildPNGChunk('pHYs', physData);
-
-  // Find end of IHDR chunk (offset 8 sig + 4 len + 4 type + 13 data + 4 crc = 33)
-  const insertAt = 33;
-
-  // Merge: [0..insertAt] + physChunk + [insertAt..]
   const result = new Uint8Array(bytes.length + physChunk.length);
-  result.set(bytes.slice(0, insertAt), 0);
-  result.set(physChunk, insertAt);
-  result.set(bytes.slice(insertAt), insertAt + physChunk.length);
-
+  result.set(bytes.slice(0, 33), 0); result.set(physChunk, 33); result.set(bytes.slice(33), 33 + physChunk.length);
   return new Blob([result], { type: 'image/png' });
 }
 
 function buildPNGChunk(type, data) {
   const typeBytes = new TextEncoder().encode(type);
-  const length = data.length;
-  const chunk = new Uint8Array(4 + 4 + length + 4);
+  const chunk = new Uint8Array(4 + 4 + data.length + 4);
   const view = new DataView(chunk.buffer);
-
-  view.setUint32(0, length, false);
-  chunk.set(typeBytes, 4);
-  chunk.set(data, 8);
-
-  // CRC32 over type + data
-  const crcInput = new Uint8Array(4 + length);
-  crcInput.set(typeBytes, 0);
-  crcInput.set(data, 4);
-  view.setUint32(8 + length, crc32(crcInput), false);
-
+  view.setUint32(0, data.length, false);
+  chunk.set(typeBytes, 4); chunk.set(data, 8);
+  const crcInput = new Uint8Array(4 + data.length);
+  crcInput.set(typeBytes, 0); crcInput.set(data, 4);
+  view.setUint32(8 + data.length, crc32(crcInput), false);
   return chunk;
 }
 
 function crc32(data) {
   let crc = 0xFFFFFFFF;
-  const table = makeCRCTable();
-  for (let i = 0; i < data.length; i++) {
-    crc = (crc >>> 8) ^ table[(crc ^ data[i]) & 0xFF];
-  }
+  const t = makeCRCTable();
+  for (let i = 0; i < data.length; i++) crc = (crc >>> 8) ^ t[(crc ^ data[i]) & 0xFF];
   return (crc ^ 0xFFFFFFFF) >>> 0;
 }
 
@@ -794,52 +1103,9 @@ function makeCRCTable() {
   return _crcTable;
 }
 
-// ─── Download ZIP ─────────────────────────────────────────────
-downloadBtn.addEventListener('click', async () => {
-  const doneItems = files.filter(f => f.status === 'done' && f.resultBlob);
-  if (!doneItems.length) return;
-
-  if (doneItems.length === 1) {
-    // Single file: direct download
-    downloadBlob(doneItems[0].resultBlob, toOutputName(doneItems[0].file.name));
-    return;
-  }
-
-  // Multiple: use JSZip via CDN
-  downloadBtn.textContent = '⏳ Zipping...';
-  downloadBtn.disabled = true;
-
-  try {
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
-    const zip = new JSZip();
-    doneItems.forEach(item => {
-      zip.file(toOutputName(item.file.name), item.resultBlob);
-    });
-    const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-    downloadBlob(zipBlob, `2kb.zip`);
-  } catch(e) {
-    // Fallback: download individually
-    for (const item of doneItems) {
-      downloadBlob(item.resultBlob, toOutputName(item.file.name));
-      await new Promise(r => setTimeout(r, 200));
-    }
-  }
-
-  downloadBtn.textContent = '⬇ Download ZIP';
-  downloadBtn.disabled = false;
-});
-
-function toOutputName(name) {
-  // Remove file extension
-  let base = name.replace(/\.(png|jpg|jpeg|svg)$/i, '');
-
-  // Remove scale suffixes like -2x, -1x, @2x, @1x, _2x, _1x (any number)
-  base = base.replace(/[-_@]\d+(\.\d+)?x/gi, '');
-
-  // Trim any trailing spaces, dashes, underscores left over
-  base = base.replace(/[-_\s]+$/, '').trim();
-
-  return `${base}-2kb.png`;
+function formatBytes(b) {
+  if (b < 1024) return `${b} B`;
+  return `${(b / 1024).toFixed(1)} KB`;
 }
 
 function downloadBlob(blob, name) {
@@ -851,19 +1117,13 @@ function downloadBlob(blob, name) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function loadScript(src) {
+async function loadScript(src) {
   return new Promise((resolve, reject) => {
     if (document.querySelector(`script[src="${src}"]`)) return resolve();
     const s = document.createElement('script');
     s.src = src; s.onload = resolve; s.onerror = reject;
     document.head.appendChild(s);
   });
-}
-
-// ─── Utils ────────────────────────────────────────────────────
-function formatBytes(b) {
-  if (b < 1024) return `${b} B`;
-  return `${(b / 1024).toFixed(1)} KB`;
 }
 </script>
 </body>
